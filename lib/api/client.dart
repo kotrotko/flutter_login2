@@ -50,10 +50,13 @@ class APIClient {
     });
   }
 
-  void login(username, Function(LoginResponse) callback) {
+  void login(phone_number, password, Function(LoginResponse) callback) {
     _dio
         .post(API_HOST + "jwt/create/",
-            data: {'username': username, 'password': 123}, //password
+            data: {
+              'phone_number': phone_number,
+              'password': password,
+            }, //password
             options: Options(validateStatus: (status) => status < 500))
         .then((response) {
       AuthTokens authTokens = response.statusCode == 200
@@ -64,13 +67,14 @@ class APIClient {
     });
   }
 
-  void register(String username, String password,
+  void register(String phone_number, String password, String date_of_birth,
       Function(RegisterResponse) callback) async {
     _dio
-        .post(API_HOST + "api/user/",
+        .post(API_HOST + "api/customuser/",
             data: {
-              'username': username,
+              'phone_number': phone_number,
               'password': password,
+              'date_of_birth': date_of_birth,
             },
             options: Options(validateStatus: (status) => status < 500))
         .then((response) {

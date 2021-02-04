@@ -13,12 +13,12 @@ class LoginForm extends StatefulWidget {
 
 class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  final _userNameController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _userNameController.dispose();
+    _phoneNumberController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -30,11 +30,21 @@ class LoginFormState extends State<LoginForm> {
         key: _formKey,
         child: Column(children: <Widget>[
           TextFormField(
-            decoration: InputDecoration(labelText: 'Username'),
-            controller: _userNameController,
+            decoration: InputDecoration(labelText: 'Phone number'),
+            controller: _phoneNumberController,
             validator: (value) {
               if (value.isEmpty) {
-                return 'Enter username';
+                return 'Enter phone number';
+              }
+              return null;
+            },
+          ),
+          TextFormField(
+            decoration: InputDecoration(labelText: 'Password'),
+            controller: _passwordController,
+            validator: (value) {
+              if (value.isEmpty) {
+                return 'Enter password';
               }
               return null;
             },
@@ -43,7 +53,8 @@ class LoginFormState extends State<LoginForm> {
             onPressed: () async {
               if (_formKey.currentState.validate()) {
                 APIClient().login(
-                    _userNameController.text,
+                    _phoneNumberController.text,
+                    _passwordController.text,
                     (loginResponse) async => {
                           if (loginResponse.statusCode == 200)
                             {
