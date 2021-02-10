@@ -1,6 +1,6 @@
 import 'dart:collection';
 import 'package:flutter_login2/models/auth.dart';
-import 'package:flutter_login2/utils/storage.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -70,7 +70,7 @@ class APIClient {
   void register(String phone_number, String password, String date_of_birth,
       Function(RegisterResponse) callback) async {
     _dio
-        .post(API_HOST + "api/customuser/",
+        .post(API_HOST + "api/user/",
             data: {
               'phone_number': phone_number,
               'password': password,
@@ -81,7 +81,12 @@ class APIClient {
       callback(new RegisterResponse(
           response.statusCode,
           HashMap.from(response.data.map((key, value) => MapEntry(
-              key.toString(), value != null ? value[0].toString() : null)))));
+              //HashMap.from(json.decode(response.data).map((key, value) => MapEntry(
+              key.toString(),
+              value != null ? value[0].toString() : null)))));
     });
   }
 }
+/*
+data = json.decode(response.body);
+ */

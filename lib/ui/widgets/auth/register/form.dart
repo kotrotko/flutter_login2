@@ -4,11 +4,13 @@ import 'package:flutter_login2/ui/screens/dashboard/dashboard.dart';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:logger/logger.dart';
 import 'dart:async';
 
 class RegisterForm extends StatefulWidget {
+  /*
   RegisterForm({Key key, this.title}) : super(key: key);
-  final String title;
+  final String title;*/
 
   @override
   State<StatefulWidget> createState() {
@@ -21,6 +23,13 @@ class RegisterFormState extends State<RegisterForm> {
   final _phoneNumberController = TextEditingController();
   final _passwordController = TextEditingController();
   final _dateOfBirthController = TextEditingController();
+
+  final _templateDate = DateFormat("yyyy-MM-dd");
+  final _log = Logger();
+
+  String dateOfBirthInString;
+  DateTime dateOfBirth;
+  bool isDateSelected = false;
 
   Future _chooseDate(BuildContext context, String initialDateString) async {
     var now = new DateTime.now();
@@ -37,13 +46,13 @@ class RegisterFormState extends State<RegisterForm> {
     if (result == null) return;
 
     setState(() {
-      _dateOfBirthController.text = new DateFormat.yMd().format(result);
+      _dateOfBirthController.text = _templateDate.format(result);
     });
   }
 
   DateTime convertToDate(String input) {
     try {
-      var d = new DateFormat.yMd().parseStrict(input);
+      var d = _templateDate.parseStrict(input);
       return d;
     } catch (e) {
       return null;
@@ -56,6 +65,12 @@ class RegisterFormState extends State<RegisterForm> {
     _passwordController.dispose();
     _dateOfBirthController.dispose();
     super.dispose();
+  }
+
+  bool isValidDob(String dob) {
+    if (dob.isEmpty) return true;
+    var d = convertToDate(dob);
+    return d != null && d.isBefore(new DateTime.now());
   }
 
   @override
@@ -96,15 +111,10 @@ class RegisterFormState extends State<RegisterForm> {
                 decoration: InputDecoration(
                     icon: Icon(Icons.calendar_today),
                     hintText: 'Enter your date of birth',
-                    labelText: 'Dob'),
+                    labelText: 'Date of birth'),
                 controller: _dateOfBirthController,
                 keyboardType: TextInputType.datetime,
-                validator: (value) {
-                  if (value.isEmpty) {
-                    return 'Not a valid date';
-                  }
-                  return null;
-                },
+                validator: (val) => isValidDob(val) ? null : "Not a valid date",
               ),
             ),
             IconButton(
@@ -118,6 +128,7 @@ class RegisterFormState extends State<RegisterForm> {
           RaisedButton(
             onPressed: () async {
               if (_formKey.currentState.validate()) {
+                _log.d('Logger is working!');
                 APIClient().register(
                   _phoneNumberController.text,
                   _passwordController.text,
