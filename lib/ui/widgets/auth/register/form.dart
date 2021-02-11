@@ -8,9 +8,8 @@ import 'package:logger/logger.dart';
 import 'dart:async';
 
 class RegisterForm extends StatefulWidget {
-  /*
   RegisterForm({Key key, this.title}) : super(key: key);
-  final String title;*/
+  final String title;
 
   @override
   State<StatefulWidget> createState() {
@@ -27,27 +26,19 @@ class RegisterFormState extends State<RegisterForm> {
   final _templateDate = DateFormat("yyyy-MM-dd");
   final _log = Logger();
 
-  String dateOfBirthInString;
-  DateTime dateOfBirth;
-  bool isDateSelected = false;
+  DateTime selectedDate = DateTime.now();
 
-  Future _chooseDate(BuildContext context, String initialDateString) async {
-    var now = new DateTime.now();
-    var initialDate = convertToDate(initialDateString) ?? now;
-    initialDate = (initialDate.year >= 1900 && initialDate.isBefore(now)
-        ? initialDate
-        : now);
-    var result = await showDatePicker(
+  Future _chooseDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: initialDate,
-        firstDate: new DateTime(1900),
-        lastDate: new DateTime.now());
-
-    if (result == null) return;
-
-    setState(() {
-      _dateOfBirthController.text = _templateDate.format(result);
-    });
+        initialDate: selectedDate,
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now());
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        _dateOfBirthController.text = _templateDate.format(picked);
+      });
   }
 
   DateTime convertToDate(String input) {
@@ -110,7 +101,6 @@ class RegisterFormState extends State<RegisterForm> {
               child: TextFormField(
                 decoration: InputDecoration(
                     icon: Icon(Icons.calendar_today),
-                    hintText: 'Enter your date of birth',
                     labelText: 'Date of birth'),
                 controller: _dateOfBirthController,
                 keyboardType: TextInputType.datetime,
@@ -121,7 +111,7 @@ class RegisterFormState extends State<RegisterForm> {
               icon: Icon(Icons.more_horiz),
               tooltip: 'Choose date',
               onPressed: (() {
-                _chooseDate(context, _dateOfBirthController.text);
+                _chooseDate(context);
               }),
             )
           ]),
