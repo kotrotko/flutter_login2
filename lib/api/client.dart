@@ -87,6 +87,3 @@ class APIClient {
     });
   }
 }
-/*
-data = json.decode(response.body);
- */

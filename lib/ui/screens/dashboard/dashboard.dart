@@ -13,6 +13,8 @@ class _DashboardState extends State<Dashboard> {
       appBar: AppBar(
         title: Text("Awesome Dashboard is coming!"),
       ),
+      body: Image.network(
+          'https://i.picsum.photos/id/1043/5184/3456.jpg?hmac=wsz2e0aFKEI0ij7mauIr2nFz2pzC8xNlgDHWHYi9qbc'),
     );
   }
 }

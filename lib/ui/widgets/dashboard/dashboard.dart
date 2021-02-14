@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class PrivateAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new AppBar(title: Text('Dashboard'), actions: <Widget>[
+    return AppBar(title: Text('Dashboard'), actions: <Widget>[
       IconButton(
         icon: const Icon(Icons.close),
         tooltip: 'Log out',
